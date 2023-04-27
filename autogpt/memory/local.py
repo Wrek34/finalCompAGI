@@ -7,17 +7,12 @@ from typing import Any, List
 import numpy as np
 import orjson
 
-from autogpt.config import Config
 from autogpt.llm_utils import get_ada_embedding
 from autogpt.memory.base import MemoryProviderSingleton
 
-CFG = Config()
-EMBED_DIM = CFG.embed_dim
 SAVE_OPTIONS = orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SERIALIZE_DATACLASS
 
 
-def create_default_embeddings():
-    return np.zeros((0, EMBED_DIM)).astype(np.float32)
 
 
 @dataclasses.dataclass
@@ -50,6 +45,7 @@ class LocalCache(MemoryProviderSingleton):
             f.write(file_content)
 
         self.data = CacheContent()
+        self.embed_dim = cfg.embed_dim
 
     def add(self, text: str):
         """
@@ -126,3 +122,6 @@ class LocalCache(MemoryProviderSingleton):
         Returns: The stats of the local cache.
         """
         return len(self.data.texts), self.data.embeddings.shape
+        
+    def create_default_embeddings(self):
+        return np.zeros((0, self.embed_dim)).astype(np.float32)

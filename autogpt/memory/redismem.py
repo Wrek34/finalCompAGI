@@ -10,20 +10,10 @@ from redis.commands.search.field import TextField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.commands.search.query import Query
 
-from autogpt.config import Config
 from autogpt.llm_utils import get_ada_embedding
 from autogpt.logs import logger
 from autogpt.memory.base import MemoryProviderSingleton
 
-CFG = Config()
-SCHEMA = [
-    TextField("data"),
-    VectorField(
-        "embedding",
-        "HNSW",
-        {"TYPE": "FLOAT32", "DIM": CFG.embed_dim, "DISTANCE_METRIC": "COSINE"},
-    ),
-]
 
 
 class RedisMemory(MemoryProviderSingleton):
@@ -47,6 +37,14 @@ class RedisMemory(MemoryProviderSingleton):
             db=0,  # Cannot be changed
         )
         self.cfg = cfg
+        self.schema = [
+            TextField("data"),
+            VectorField(
+                "embedding",
+                "HNSW",
+                {"TYPE": "FLOAT32", "DIM": cfg.embed_dim, "DISTANCE_METRIC": "COSINE"},
+            ),
+        ]
 
         # Check redis connection
         try:
@@ -69,7 +67,7 @@ class RedisMemory(MemoryProviderSingleton):
             self.redis.flushall()
         try:
             self.redis.ft(f"{cfg.memory_index}").create_index(
-                fields=SCHEMA,
+                fields=self.schema,
                 definition=IndexDefinition(
                     prefix=[f"{cfg.memory_index}:"], index_type=IndexType.HASH
                 ),
