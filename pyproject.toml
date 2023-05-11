@@ -1,25 +1,47 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "agpt"
+[tool.poetry]
+name = "auto-gpt"
 version = "0.3.0"
-authors = [
-  { name="Torantulino", email="support@agpt.co" },
-]
-readme = "README.md"
-requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
 description = "An open-source attempt to make GPT-4 autonomous"
+authors = ["many"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "auto_gpt"}]
 
 [project.urls]
 "Homepage" = "https://github.com/Significant-Gravitas/Auto-GPT"
 "Bug Tracker" = "https://github.com/Significant-Gravitas/Auto-GPT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^1.10.7"
+asyncclick = "^8.1.3.4"
+openai = "^0.27.6"
+python-dotenv = "^1.0.0"
+anyio = "^3.6.2"
+
+[tool.poetry.group.dev.dependencies]
+urllib3 = "^1.26"
+coverage = "^7.2.5"
+flake8 = "^6.0.0"
+pytest-asyncio = "^0.21.0"
+pytest = "^7.3.1"
+black = "^23.3.0"
+isort = "^5.12.0"
+pre-commit = "^3.3.1"
+pytest-mock = "^3.10.0"
+
+
+[tool.poetry.group.server.dependencies]
+fastapi = "^0.95.1"
+uvicorn = "^0.22.0"
+
+
+[tool.poetry.group.cloud.dependencies]
+kafka = "^1.3.5"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 88
