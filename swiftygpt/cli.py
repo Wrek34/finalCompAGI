@@ -16,7 +16,7 @@ def start() -> None:
     import swiftygpt.agent_factory
     from swiftygpt.messaging.queue_channel import QueueChannel
 
-    channel = QueueChannel("channel1", "localhost", 8080)
+    channel = QueueChannel(id="channel1", name="channel1", host="localhost", port=8080)
     agent1 = swiftygpt.agent_factory.build_agent("agent1", channel)
     agent2 = swiftygpt.agent_factory.build_agent("agent2", channel)
 

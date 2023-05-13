@@ -81,10 +81,6 @@ class BaseAgent(pydantic.BaseModel):
     uid: str
     message_broker: BaseMessageBroker
 
-    def __init__(self, uid: str, message_broker: BaseMessageBroker):
-        self.uid = uid
-        self.message_broker = message_broker
-
     async def run(self) -> None:
         """Runs the agent"""
         raise NotImplementedError

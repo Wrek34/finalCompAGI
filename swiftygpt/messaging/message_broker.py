@@ -5,10 +5,6 @@ from swiftygpt.schema import BaseMessage, BaseMessageBroker, BaseMessageChannel
 class MessageBroker(BaseMessageBroker):
     """A message broker that holds all the channels an agent can communicate on."""
 
-    def __init__(self, channels: list[BaseMessageChannel]) -> None:
-        """Initializes a message broker."""
-        self.channels = channels
-
     def list_channels(self) -> None:
         """Lists all the channels."""
         return self.channels
@@ -29,8 +25,8 @@ class MessageBroker(BaseMessageBroker):
 
     async def get_from_channel(self, channel_uid: str) -> BaseMessage:
         """Gets a message from a channel."""
-        return self.get_channel(channel_uid).get()
+        return await self.get_channel(channel_uid).get()
 
     async def send_to_channel(self, channel_uid: str, message: BaseMessage) -> None:
         """Sends a message to a channel."""
-        return self.get_channel(channel_uid).send(message)
+        return await self.get_channel(channel_uid).send(message)

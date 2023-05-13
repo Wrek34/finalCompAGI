@@ -1,5 +1,6 @@
 import asyncio
 import random
+import time
 
 from swiftygpt.messaging.messages import (
     CommandMessage,
@@ -14,35 +15,46 @@ from swiftygpt.schema import BaseAgent, BaseMessage, BaseMessageBroker
 class SampleAgent(BaseAgent):
     """An async agent that can send a receive messages using a BaseMessage and process all subtypes of BaseMessage"""
 
-    uid: str
     name: str
-    message_broker: BaseMessageBroker
 
-    def __init__(self, name: str, uid: str, message_broker: BaseMessageBroker):
-        self.name = name
-        self.uid = uid
-        self.message_broker = message_broker
-
-    def testing_random_action(self) -> None:
+    async def testing_random_action(self) -> None:
         """A random action for testing purposes"""
+        to_uid = "agent1"
+        if self.uid == "agent1":
+            to_uid = "agent2"
         roll = random.randint(1, 3)
+        timestamp = int(time.time())
         if roll == 1:
-            self.message_broker.send_to_channel(
-                "channel1", QueryMessage(query="What is the meaning of life?")
+            await self.message_broker.send_to_channel(
+                "channel1",
+                QueryMessage(
+                    query="What is the meaning of life?",
+                    from_uid=self.uid,
+                    to_uid=to_uid,
+                    timestamp=timestamp,
+                ),
             )
         elif roll == 2:
-            self.message_broker.send_to_channel(
-                "channel1", CommandMessage(command="Do something!")
+            await self.message_broker.send_to_channel(
+                "channel1",
+                CommandMessage(
+                    command="Do something!",
+                    from_uid=self.uid,
+                    to_uid=to_uid,
+                    timestamp=timestamp,
+                ),
             )
 
     async def run(self) -> None:
         """Runs the agent"""
         while True:
+            print(f"Agent: {self.uid} is running...")
+            # Perform a random action
+            await self.testing_random_action()
             for channel in self.message_broker.channels:
                 message = await channel.get()
                 await self.process_message(message)
-            # Perform a random action
-            self.testing_random_action()
+
             # sleep 1 second
             await asyncio.sleep(1)
 
