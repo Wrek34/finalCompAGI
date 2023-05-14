@@ -9,13 +9,14 @@ from swiftygpt.messaging.messages import (
     ResponseMessage,
     StatusMessage,
 )
-from swiftygpt.schema import BaseAgent, BaseMessage, BaseMessageBroker
+from swiftygpt.schema import BaseAgent, BaseLLMProvider, BaseMessage, BaseMessageBroker
 
 
 class SampleAgent(BaseAgent):
     """An async agent that can send a receive messages using a BaseMessage and process all subtypes of BaseMessage"""
 
     name: str
+    llm_provider: BaseLLMProvider
 
     async def testing_random_action(self) -> None:
         """A random action for testing purposes"""
@@ -35,15 +36,10 @@ class SampleAgent(BaseAgent):
                 ),
             )
         elif roll == 2:
-            await self.message_broker.send_to_channel(
-                "channel1",
-                CommandMessage(
-                    command="Do something!",
-                    from_uid=self.uid,
-                    to_uid=to_uid,
-                    timestamp=timestamp,
-                ),
+            ans = await self.llm_provider.create_chat_completion(
+                [{"role": "user", "content": "Hello, how are you?"}]
             )
+            print(ans)
 
     async def run(self) -> None:
         """Runs the agent"""

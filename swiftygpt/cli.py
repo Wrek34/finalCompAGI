@@ -1,5 +1,9 @@
 """Example agents for the SwiftyGPT library."""
+import logging.config
+
 import click
+
+import swiftygpt.config
 
 
 @click.group()
@@ -133,4 +137,5 @@ main.add_command(examples)
 
 
 if __name__ == "__main__":
+    logging.config.dictConfig(swiftygpt.config.logging_config)
     main()
