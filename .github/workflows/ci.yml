@@ -229,7 +229,7 @@ jobs:
 
       - id: create_pr
         name: Create Pull Request if score changed
-        if: ${{ startsWith(github.event_name, 'pull_request') && steps.push_challenge_scores.outputs.updated_score_branch != '' }}
+        if: ${{ startsWith(github.event_name, 'pull_request')}}
         run: |
           base_repo_owner=${{ github.event.pull_request.base.repo.owner.login }}
           base_repo_name=${{ github.event.pull_request.base.repo.name }}
@@ -238,7 +238,7 @@ jobs:
           pr_number=$(gh api repos/$base_repo_owner/$base_repo_name/pulls -q ".[] | select(.head.ref == \"$updated_score_branch\") | .number")
           
           # If PR does not exist or is closed then create a new PR
-          if steps.push_challenge_scores.outputs.updated_score_branch; then
+          if [ "steps.push_challenge_scores.outputs.updated_score_branch" != "" ]; then
             if [ -n "$pr_number" ]; then
               gh api -X PATCH repos/$base_repo_owner/$base_repo_name/pulls/$pr_number -f state=closed
             fi
