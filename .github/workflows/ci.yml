@@ -177,7 +177,7 @@ jobs:
             git add $score_file
             git commit -m "Update challenge scores"
             if [ "${{ startsWith(github.event_name, 'pull_request') }}" = "true" ]; then
-              update_score_branch="update-score-${{ github.event.pull_request.number }}-$(date +'%Y%m%d%H%M%S')"
+              updated_score_branch="update-score-${{ github.event.pull_request.number }}-$(date +'%Y%m%d%H%M%S')"
               git checkout -b $updated_score_branch
               git remote add ${{ github.event.pull_request.base.repo.name }} https://github.com/$base_repo_owner/$${{ github.event.pull_request.base.repo.name }}.git
               git push -f base_repo $updated_score_branch
