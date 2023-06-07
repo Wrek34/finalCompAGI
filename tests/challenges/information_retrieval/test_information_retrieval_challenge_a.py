@@ -28,6 +28,7 @@ def test_information_retrieval_challenge_a(
     :param get_company_revenue_agent: The agent to test.
     :param monkeypatch: pytest's monkeypatch utility for modifying builtins.
     """
+    #dummy
     information_retrieval_agent = information_retrieval_agents[level_to_run - 1]
     run_interaction_loop(monkeypatch, information_retrieval_agent, CYCLE_COUNT)
 
